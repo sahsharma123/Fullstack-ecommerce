@@ -1,6 +1,6 @@
 import React, { useContext } from 'react'
-import { ShopContext } from '../context/ShopContext'
-import Title from '../components/Title';
+import { ShopContext } from '../context/ShopContext.jsx'
+import Title from '../components/Title.jsx';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import axios from 'axios';
@@ -17,6 +17,9 @@ const Orders = () => {
       }
 
       const response =await axios.post(backendUrl + '/api/order/userorders',{},{headers:{token}})
+      console.log("Raw Response:", response.data);
+console.log("Orders array:", response.data.orders);
+
       if(response.data.success){
         let allOrdersItem=[]
         response.data.orders.map((order)=>{
@@ -28,12 +31,16 @@ const Orders = () => {
             allOrdersItem.push(item)
           })
         })
+        console.log(allOrdersItem);
+        
         setorderData(allOrdersItem.reverse());
         
-      }
+      } else {
+      console.warn("Response returned success: false");
+    }
       
     } catch (error) {
-      
+      console.error("Order fetch failed:", error.response?.data || error.message);
     }
   }
   useEffect(
